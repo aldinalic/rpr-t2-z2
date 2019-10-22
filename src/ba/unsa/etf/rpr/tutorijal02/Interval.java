@@ -38,8 +38,14 @@ public class Interval {
 
     public static Interval intersect(Interval i1, Interval i2) {
         Interval presjek;
-        if (i1.pocetna >= i2.pocetna && i1.pocetna <= i2.krajnja) presjek = new Interval(i1.pocetna, i2.krajnja, i1.prip_poc, i2.prip_kraj);
-        else if (i2.pocetna >= i1.pocetna && i2.pocetna <= i2.krajnja) presjek = new Interval(i2.pocetna, i1.krajnja, i2.prip_poc, i1.prip_kraj);
+        if (i1.pocetna >= i2.pocetna && i1.pocetna <= i2.krajnja) { // provjerava da li je prvi interval manji od drugog, tj. pocetak prvog manji od pocetka drugog
+            if (i1.krajnja >= i2.pocetna && i1.krajnja <= i2.krajnja) presjek = new Interval(i1.pocetna, i1.krajnja, i1.prip_poc, i1.prip_kraj);//ako se i1 nalazi u i2
+            else presjek = new Interval(i1.pocetna, i2.krajnja, i1.prip_poc, i2.prip_kraj); // ako je pocetak i1 u intervalu i2, ali kraj i1 je izvan i2
+        }
+        else if (i2.pocetna >= i1.pocetna && i2.pocetna <= i2.krajnja) {
+            if (i2.krajnja >= i1.pocetna && i2.krajnja <= i1.krajnja) presjek = new Interval(i2.pocetna, i2.krajnja, i2.prip_poc, i2.prip_kraj);
+            else presjek = new Interval(i2.pocetna, i1.krajnja, i2.prip_poc, i1.prip_kraj); // isto kao 2. slucaj iz prvog uslova
+        }
         else presjek = new Interval();
         return presjek;
     }
@@ -59,7 +65,7 @@ public class Interval {
             else interval += ")";
         }
         else {
-            if (!prip_kraj) return interval += "()"; //kada ni pocetna ni krajnja granica ne pripadaju, a interval je od 0 do 0, tj. konstruktor bez parametara
+            if (!prip_kraj && pocetna == 0 && krajnja == 0) return interval += "()"; //kada ni pocetna ni krajnja granica ne pripadaju, a interval je od 0 do 0, tj. konstruktor bez parametara
             interval += "("; interval += pocetna; interval += ","; interval += krajnja;
             if (prip_kraj) interval += "]";
             else interval += ")";
